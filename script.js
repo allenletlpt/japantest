@@ -1,0 +1,235 @@
+// --- 1. Data Configuration ---
+const INITIAL_DATA = {
+    "d1-t1": "16:22", "d1-t2": "17:00", "d1-t3": "17:30", "d1-t4": "18:00", "d1-t5": "19:00",
+    "d2-t1": "09:00", "d2-t2": "10:30", "d2-t3": "13:00", "d2-t4": "15:30",
+    "d3-t1": "09:30", "d3-t2": "10:45", "d3-t3": "14:00", "d3-t4": "17:00",
+    "d4-t1": "10:00", "d4-t2": "12:30", "d4-t3": "14:30",
+    "d5-t1": "11:00", "d5-t2": "12:30", "d5-t3": "14:30", "d5-t4": "17:30",
+    "d6-t1": "上午", "d6-t2": "14:30", "d6-t3": "17:00"
+};
+
+const ITINERARY_CONFIG = [
+    {
+        day: 1, date: "2/23 (一)", title: "抵達仙台", weather: "晴時多雲 2°C~6°C", weatherIcon: "🌤️",
+        events: [
+            { id: "e1-1", timeKey: "d1-t1", noteKey: "d1-n1", title: "抵達仙台機場", description: "🎉 東北之旅，集合出發！", locationLink: "https://www.google.com/maps/search/?api=1&query=仙台空港", imageSrc: "day1-1.png" },
+            { id: "e1-2", timeKey: "d1-t2", noteKey: "d1-n2", title: "前往市區", badges: [{ text: "🚄 搭乘機場聯絡線 (約25分)", type: "info" }], details: { title: "住宿", items: ["Hotel GrandBach Sendai"] } },
+            { id: "e1-3", timeKey: "d1-t5", noteKey: "d1-n3", title: "晚餐：牛舌 善治郎", highlight: true, locationLink: "https://www.google.com/maps/search/?api=1&query=たんや善治郎+仙台駅前本店", details: { title: "仙台必吃：炭燒牛舌", items: ["特色：經典厚切牛舌定食，配麥飯與牛尾湯。", "長輩建議：可點「燉煮牛舌 (Yude-tan)」，口感軟嫩。"] }, imageSrc: "day1-2.png" }
+        ]
+    },
+    {
+        day: 2, date: "2/24 (二)", title: "樹冰 & 銀山", weather: "大雪寒冷 -8°C~-2°C", weatherIcon: "🌨️",
+        events: [
+            { id: "e2-1", timeKey: "d2-t1", noteKey: "d2-n1", title: "包車司機接駁" },
+            { id: "e2-2", timeKey: "d2-t2", noteKey: "d2-n2", title: "藏王樹冰 (雪怪車)", highlight: true, locationLink: "https://www.google.com/maps/search/?api=1&query=Sumikawa+Snow+Park", details: { title: "WILD MONSTER 雪怪車", items: ["特色：搭乘暖氣履帶車，近距離看樹冰。", "穿著：山上極冷，務必戴好毛帽、手套、圍巾。"] }, imageSrc: "day2-1.png" },
+            { id: "e2-3", timeKey: "d2-t4", noteKey: "d2-n3", title: "抵達銀山溫泉", locationLink: "https://www.google.com/maps/search/?api=1&query=銀山溫泉", details: { title: "大正浪漫 銀山溫泉", items: ["美景：傍晚藍調時刻(Blue Hour)點燈最美。", "安全：地面結冰非常滑！務必穿防滑鞋套。", "住宿：銀山溫泉"] }, imageSrc: "day2-2.png" }
+        ]
+    },
+    {
+        day: 3, date: "2/25 (三)", title: "最上川遊船", weather: "小雪/陰 -1°C~3°C", weatherIcon: "❄️",
+        events: [
+            { id: "e3-1", timeKey: "d3-t1", noteKey: "d3-n1", title: "出發" },
+            { id: "e3-2", timeKey: "d3-t2", noteKey: "d3-n2", title: "最上川 芭蕉遊船", highlight: true, details: { title: "冬季暖桌遊船", items: ["舒適：船內有暖被桌，雙腳溫暖地欣賞雪見峽谷。"] }, imageSrc: "day3-1.png" },
+            { id: "e3-3", timeKey: "d3-t3", noteKey: "d3-n3", title: "酒田 山居倉庫", locationLink: "https://www.google.com/maps/search/?api=1&query=酒田+山居倉庫", details: { title: "山居倉庫 (夢之俱樂)", items: ["特色：百年米倉建築群，非常好買在地伴手禮。", "住宿：湯野濱溫泉"] }, imageSrc: "day3-2.png" }
+        ]
+    },
+    {
+        day: 4, date: "2/26 (四)", title: "水母館 & 萬國屋", weather: "陰偶雪 1°C~5°C", weatherIcon: "☁️",
+        events: [
+            { id: "e4-1", timeKey: "d4-t1", noteKey: "d4-n1", title: "加茂水族館", highlight: true, locationLink: "https://www.google.com/maps/search/?api=1&query=加茂水族館", details: { title: "水母夢幻劇場", items: ["療癒：直徑5公尺的巨大水母槽，世界第一。"] }, imageSrc: "day4-1.png" },
+            { id: "e4-2", timeKey: "d4-t3", noteKey: "d4-n2", title: "入住萬國屋", details: { title: "溫海溫泉 萬國屋", items: ["享受：日本百選溫泉，盡情享受風呂與懷石料理。"] }, imageSrc: "day4-2.png" }
+        ]
+    },
+    {
+        day: 5, date: "2/27 (五)", title: "採草莓 & 神社", weather: "晴時多雲 0°C~5°C", weatherIcon: "🌤️",
+        events: [
+            { id: "e5-1", timeKey: "d5-t1", noteKey: "d5-n1", title: "採草莓體驗", highlight: true, details: { title: "溫室高架草莓", items: ["貼心：高架種植，不用彎腰蹲下，對長輩膝蓋友善。"] }, imageSrc: "day5-1.png" },
+            { id: "e5-2", timeKey: "d5-t3", noteKey: "d5-n2", title: "大崎八幡宮", highlight: true, locationLink: "https://www.google.com/maps/search/?api=1&query=大崎八幡宮", details: { title: "國寶 大崎八幡宮", items: ["省力：請司機開到「北側停車場」或側面入口，完全避開爬樓梯。", "住宿：仙台市區"] }, imageSrc: "day5-2.png" }
+        ]
+    },
+    {
+        day: 6, date: "2/28 (六)", title: "返台", weather: "晴朗 3°C~7°C", weatherIcon: "☀️",
+        events: [
+            { id: "e6-1", timeKey: "d6-t1", noteKey: "d6-n1", title: "仙台朝市 / S-PAL", details: { title: "最後採買時光", items: ["朝市：感受在地活力，買當季水果。", "S-PAL：車站共構，伴手禮一次買齊。"] }, imageSrc: "day6-1.png" },
+            { id: "e6-2", timeKey: "d6-t3", noteKey: "d6-n2", title: "搭機返台", description: "✈️ 航班：甜蜜的家", imageSrc: "day6-2.png" }
+        ]
+    }
+];
+
+// --- 2. State & Init ---
+let currentDay = 1;
+let isEditMode = false;
+let editData = JSON.parse(JSON.stringify(INITIAL_DATA));
+
+// Load data on startup
+document.addEventListener('DOMContentLoaded', () => {
+    const saved = localStorage.getItem('tripData');
+    if (saved) {
+        try {
+            editData = JSON.parse(saved);
+        } catch (e) {
+            console.error('Data load error', e);
+        }
+    }
+    renderTabs();
+    renderDay();
+});
+
+// --- 3. Rendering Functions ---
+
+function renderTabs() {
+    const container = document.getElementById('tabs-container');
+    container.innerHTML = ITINERARY_CONFIG.map(d => `
+        <button onclick="switchDay(${d.day})" 
+            class="snap-center flex-shrink-0 flex flex-col items-center justify-center rounded-2xl px-5 py-2 transition-all duration-300 shadow-sm border
+            ${d.day === currentDay
+            ? 'bg-primary-blue text-white border-primary-blue scale-105 shadow-md'
+            : 'bg-white text-gray-500 border-gray-100 hover:bg-gray-50'}">
+            <span class="text-xs font-bold ${d.day === currentDay ? 'text-blue-50' : 'text-gray-400'}">Day ${d.day}</span>
+            <span class="text-sm font-bold whitespace-nowrap">${d.date.split(' ')[0]}</span>
+        </button>
+    `).join('');
+}
+
+function renderDay() {
+    const dayConfig = ITINERARY_CONFIG.find(d => d.day === currentDay);
+    const container = document.getElementById('day-content');
+
+    if (!dayConfig) return;
+
+    let html = `
+        <!-- Weather Header -->
+        <div class="mb-6 flex items-center justify-between rounded-2xl bg-gradient-to-r from-blue-50 to-white p-4 border border-blue-100 animate-fadeIn">
+            <div class="flex items-center gap-3">
+                <span class="text-3xl filter drop-shadow-sm">${dayConfig.weatherIcon}</span>
+                <div>
+                    <div class="text-xs font-bold text-gray-400 uppercase tracking-wide">Weather</div>
+                    <div class="text-sm font-bold text-blue-600">${dayConfig.weather}</div>
+                </div>
+            </div>
+            <div class="text-right">
+                <div class="text-xs font-bold text-gray-400 uppercase tracking-wide">Date</div>
+                <div class="text-sm font-bold text-gray-700">${dayConfig.date}</div>
+            </div>
+        </div>
+    `;
+
+    // Events
+    html += dayConfig.events.map(event => renderEventCard(event)).join('');
+    html += '<div class="h-10"></div>';
+
+    container.innerHTML = html;
+}
+
+function renderEventCard(event) {
+    const timeVal = editData[event.timeKey] || '';
+    const noteVal = editData[event.noteKey] || '';
+
+    const timeHtml = isEditMode
+        ? `<input type="text" oninput="updateData('${event.timeKey}', this.value)" value="${timeVal}" class="w-20 rounded border-2 border-dashed border-red-300 bg-red-50 px-2 py-1 text-center text-sm font-bold text-red-500 focus:outline-none">`
+        : `<span class="inline-block min-w-[60px] rounded-lg px-2 py-1 text-center text-xs font-bold text-white shadow-sm ${timeVal ? 'bg-gray-400' : 'bg-gray-200'}">${timeVal || '--:--'}</span>`;
+
+    const noteHtml = (isEditMode || noteVal)
+        ? `<div class="mt-3 rounded-lg border-l-4 border-purple-300 bg-purple-50 p-3 text-sm text-purple-700 ${isEditMode ? 'border-dashed border-2' : ''}">
+            ${isEditMode
+            ? `<textarea oninput="updateData('${event.noteKey}', this.value)" rows="2" class="w-full bg-transparent focus:outline-none resize-none" placeholder="在此輸入筆記...">${noteVal}</textarea>`
+            : `<p>${noteVal}</p>`}
+           </div>`
+        : '';
+
+    const imageHtml = event.imageSrc
+        ? `<div class="relative h-48 w-full overflow-hidden bg-gray-100">
+             <img src="${event.imageSrc}" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105 group-hover:rotate-1" alt="${event.title}">
+             ${event.highlight ? '<div class="absolute top-3 right-3 bg-pink-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">必去 ✨</div>' : ''}
+           </div>`
+        : '';
+
+    const badgesHtml = event.badges
+        ? `<div class="mt-2 flex flex-wrap gap-2">${event.badges.map(b => `<span class="rounded-md bg-blue-50 px-2 py-1 text-xs text-blue-600 border border-blue-100">${b.text}</span>`).join('')}</div>`
+        : '';
+
+    const detailsHtml = event.details
+        ? `<div class="mt-4">
+             <button onclick="toggleDetails(this)" class="flex items-center gap-1 text-xs font-bold text-green-600 bg-green-50 px-3 py-1.5 rounded-full hover:bg-green-100 transition-colors w-fit">💡 查看詳情</button>
+             <div class="details-content mt-3 hidden rounded-xl bg-gray-50 p-4 text-sm text-gray-600 border border-gray-100">
+                <h6 class="mb-2 font-bold text-blue-500">${event.details.title}</h6>
+                <ul class="list-inside list-disc space-y-1 text-xs leading-relaxed">
+                    ${event.details.items.map(i => `<li>${i}</li>`).join('')}
+                </ul>
+             </div>
+           </div>`
+        : '';
+
+    return `
+        <div class="group relative mb-6 flex flex-col overflow-hidden rounded-3xl bg-white shadow-sm transition-all duration-300 hover:shadow-md border border-gray-100 ${event.highlight ? 'ring-2 ring-pink-100' : ''} animate-fadeIn">
+            ${imageHtml}
+            <div class="flex flex-1 flex-col p-5">
+                <div class="mb-2 flex items-start justify-between">
+                    <div class="flex flex-col gap-1 w-full">
+                        <div class="flex items-center">
+                            ${timeHtml}
+                            ${event.locationLink ? `<a href="${event.locationLink}" target="_blank" class="ml-2 flex items-center gap-1 rounded-full bg-blue-50 px-2 py-1 text-xs font-bold text-blue-500 hover:bg-blue-100">📍 導航</a>` : ''}
+                        </div>
+                        <h3 class="mt-2 text-lg font-bold text-gray-700 ${event.highlight ? 'text-pink-600' : ''}">${event.title}</h3>
+                        ${event.description ? `<p class="text-sm text-gray-500">${event.description}</p>` : ''}
+                        ${badgesHtml}
+                    </div>
+                </div>
+                ${noteHtml}
+                ${detailsHtml}
+            </div>
+        </div>
+    `;
+}
+
+// --- 4. Logic Functions ---
+
+function switchDay(day) {
+    currentDay = day;
+    renderTabs(); // Refresh active state
+    renderDay();
+}
+
+function toggleEditMode() {
+    if (isEditMode) {
+        // Save
+        localStorage.setItem('tripData', JSON.stringify(editData));
+        const toast = document.getElementById('toast');
+        toast.classList.remove('hidden');
+        toast.classList.add('animate-bounce');
+        setTimeout(() => toast.classList.add('hidden'), 2500);
+
+        // Switch UI back
+        isEditMode = false;
+        document.getElementById('btn-action').classList.remove('bg-green-400', 'hover:bg-green-500');
+        document.getElementById('btn-action').classList.add('bg-primary-blue');
+        document.getElementById('btn-icon').innerText = '✏️';
+    } else {
+        // Enter Edit
+        isEditMode = true;
+        document.getElementById('btn-action').classList.remove('bg-primary-blue');
+        document.getElementById('btn-action').classList.add('bg-green-400', 'hover:bg-green-500');
+        document.getElementById('btn-icon').innerText = '💾';
+    }
+    renderDay();
+}
+
+function updateData(key, value) {
+    editData[key] = value;
+}
+
+function toggleDetails(btn) {
+    const content = btn.nextElementSibling;
+    if (content.classList.contains('hidden')) {
+        content.classList.remove('hidden');
+        content.classList.add('animate-fadeIn');
+        btn.innerText = '🔽 收起資訊';
+    } else {
+        content.classList.add('hidden');
+        btn.innerText = '💡 查看詳情';
+    }
+}
+window.switchDay = switchDay;
+window.toggleEditMode = toggleEditMode;
+window.updateData = updateData;
+window.toggleDetails = toggleDetails;
