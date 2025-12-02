@@ -19,6 +19,15 @@
               'warm-pink': '#ffeaa7',
               'primary-blue': '#89c4f4',
               'primary-text': '#555555',
+            },
+            animation: {
+                fadeIn: 'fadeIn 0.5s ease-in-out',
+            },
+            keyframes: {
+                fadeIn: {
+                    '0%': { opacity: '0', transform: 'translateY(10px)' },
+                    '100%': { opacity: '1', transform: 'translateY(0)' },
+                }
             }
           }
         }
@@ -29,8 +38,9 @@
         background-color: #fdfbf7;
         background-image: radial-gradient(#e0e0e0 1px, transparent 1px);
         background-size: 20px 20px;
+        /* Prevent pull-to-refresh on mobile */
+        overscroll-behavior-y: none;
       }
-      /* Custom scrollbar for horizontal tabs */
       .scrollbar-hide::-webkit-scrollbar {
           display: none;
       }
@@ -38,18 +48,26 @@
           -ms-overflow-style: none;
           scrollbar-width: none;
       }
+      .glass-effect {
+          background: rgba(253, 251, 247, 0.9);
+          backdrop-filter: blur(8px);
+      }
     </style>
-<script type="importmap">
+    <script type="importmap">
 {
   "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/client": "https://aistudiocdn.com/react-dom@^19.2.0/client",
+    "react/jsx-runtime": "https://aistudiocdn.com/react@^19.2.0/jsx-runtime",
+    "react-dom": "https://aistudiocdn.com/react-dom@^19.2.0",
     "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
-    "react": "https://aistudiocdn.com/react@^19.2.0"
+    "react/": "https://aistudiocdn.com/react@^19.2.0/"
   }
 }
 </script>
 </head>
-<body>
+<body class="font-sans text-primary-text antialiased selection:bg-pink-100 selection:text-pink-600">
     <div id="root"></div>
+    <script type="module" src="./index.tsx"></script>
 </body>
 </html>
